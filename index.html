@@ -551,6 +551,19 @@
     .cursor-demo.success img { animation: popCheck 1.2s ease-in-out infinite; }
     .cursor-note { margin-top: 12px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 
+    .motion-toggle { display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border: 1px solid var(--cyan); border-radius: 999px; color: var(--cyan); cursor: pointer; }
+    .motion-toggle input { accent-color: var(--cyan); }
+    .cursor-demo.animated { position: relative; cursor: none; overflow: hidden; }
+    .cursor-follow { position: absolute; left: 50%; top: 50%; width: 28px; height: 28px; pointer-events: none; z-index: 5; transform: translate(-50%, -50%); border: 2px solid var(--cyan); clip-path: polygon(0 0, 100% 42%, 62% 52%, 82% 100%, 62% 100%, 42% 58%, 0 100%); filter: drop-shadow(0 0 5px var(--cyan)); animation: cursorPulse .75s ease-in-out infinite alternate; }
+    .cursor-follow::after { content: ""; position: absolute; inset: -7px; border: 1px solid var(--cyan); border-radius: 50%; opacity: .55; animation: cursorScan 1.1s linear infinite; }
+    .cursor-demo.animated.busy .cursor-follow { border-color: var(--yellow); filter: drop-shadow(0 0 6px var(--yellow)); animation: cursorSpin .8s linear infinite; }
+    .cursor-demo.animated.busy .cursor-follow::after { border-color: var(--yellow); }
+    .cursor-demo.animated.success .cursor-follow { border-color: var(--green); filter: drop-shadow(0 0 6px var(--green)); }
+    .cursor-demo.animated.success .cursor-follow::after { border-color: var(--green); }
+    .motion-off .cursor-follow, .motion-off .cursor-follow::after { animation-play-state: paused !important; }
+    @keyframes cursorPulse { to { transform: translate(-50%, -50%) scale(1.12); opacity: .8; } }
+    @keyframes cursorScan { to { transform: scale(1.65); opacity: 0; } }
+    @keyframes cursorSpin { to { transform: translate(-50%, -50%) rotate(360deg); } }
 </style>
   <link rel="stylesheet" href="./cursor.css">
 </head>
@@ -566,6 +579,7 @@
       <span class="chip">HTML/CSSのみ</span>
       <span class="chip">pet風キャラクター</span>
       <span class="chip">状態表示向け</span>
+      <label class="motion-toggle"><input id="motionToggle" type="checkbox" checked> アニメーション再生</label>
     </div>
 
 
@@ -707,6 +721,26 @@
       </article>
     </section>
   </main>
+  <script>
+    const toggle = document.getElementById("motionToggle");
+    const root = document.documentElement;
+    const syncMotion = () => root.classList.toggle("motion-off", !toggle.checked);
+    toggle.addEventListener("change", syncMotion);
+    syncMotion();
+    document.querySelectorAll(".cursor-demo").forEach((area) => {
+      area.classList.add("animated");
+      const follower = document.createElement("span");
+      follower.className = "cursor-follow";
+      follower.setAttribute("aria-hidden", "true");
+      area.appendChild(follower);
+      area.addEventListener("pointermove", (event) => {
+        const rect = area.getBoundingClientRect();
+        follower.style.left = `${event.clientX - rect.left}px`;
+        follower.style.top = `${event.clientY - rect.top}px`;
+      });
+    });
+  </script>
 </body>
 </html>
+
 
