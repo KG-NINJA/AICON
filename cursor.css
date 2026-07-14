@@ -1,0 +1,8 @@
+:root {
+  --ai-cursor: url("./cursors/ai-pointer.svg") 4 2, auto;
+  --ai-busy: url("./cursors/ai-busy.svg") 16 16, wait;
+  --ai-success: url("./cursors/ai-success.svg") 16 16, default;
+}
+.ai-cursor { cursor: var(--ai-cursor); }
+.ai-cursor.is-busy, [aria-busy="true"] { cursor: var(--ai-busy); }
+.ai-cursor.is-success { cursor: var(--ai-success); }
