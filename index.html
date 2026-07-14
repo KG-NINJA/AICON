@@ -561,6 +561,7 @@
     .cursor-demo.animated.success .cursor-follow { border-color: var(--green); filter: drop-shadow(0 0 6px var(--green)); }
     .cursor-demo.animated.success .cursor-follow::after { border-color: var(--green); }
     .motion-off .cursor-follow, .motion-off .cursor-follow::after { animation-play-state: paused !important; }
+    .motion-forced *, .motion-forced *::before, .motion-forced *::after { animation-duration: 1s !important; animation-iteration-count: infinite !important; animation-play-state: running !important; }
     @keyframes cursorPulse { to { transform: translate(-50%, -50%) scale(1.12); opacity: .8; } }
     @keyframes cursorScan { to { transform: scale(1.65); opacity: 0; } }
     @keyframes cursorSpin { to { transform: translate(-50%, -50%) rotate(360deg); } }
@@ -725,6 +726,7 @@
     const toggle = document.getElementById("motionToggle");
     const root = document.documentElement;
     const syncMotion = () => root.classList.toggle("motion-off", !toggle.checked);
+      root.classList.toggle("motion-forced", toggle.checked);
     toggle.addEventListener("change", syncMotion);
     syncMotion();
     document.querySelectorAll(".cursor-demo").forEach((area) => {
@@ -742,5 +744,7 @@
   </script>
 </body>
 </html>
+
+
 
 
